@@ -6,6 +6,7 @@ __author__ = "andrewtaylor2@gmail.com"
 import serial
 from time import sleep
 import time
+import argparse
 
 class PingPongNotifier(object):
 
@@ -55,10 +56,18 @@ class PingPongNotifier(object):
   def set_all(self, colour):
     for i in range(self.number_of_leds):
       self.leds[i] = colour
-      
+
+parser = argparse.ArgumentParser(description='Controls an attached LED light bar')
+parser.add_argument('--port', dest='port', default="/dev/ttyUSB0", help='The serial port to open (defaults to /dev/ttyUSB0)')
+parser.add_argument('--baudrate', dest='baudrate', default="9600", help='The serial baudrate (defaults to 9600)')
+args = parser.parse_args()
+
+print ("Configuration:")
+print ("port:     %s" % (args.port))
+print ("baudrate: %s" % (args.baudrate))
 
 LEDS = 8
-ppn = PingPongNotifier("/dev/ttyUSB1", 9600, LEDS)
+ppn = PingPongNotifier(args.port, args.baudrate, LEDS)
 
 for idx in range(LEDS):
   ppn.set_led(idx, ppn.BLACK)
